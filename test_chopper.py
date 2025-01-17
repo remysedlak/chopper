@@ -2,6 +2,16 @@
 from tkinter import *
 # ttkbootstrap, the theme library
 import ttkbootstrap as tb
+# Import our python app with the audio logic
+import audio_manipulation as am
+# Import the filedialog to open files
+from tkinter import filedialog
+
+def openfile():
+    filepath = filedialog.askopenfile()
+    file = open(filepath.name, "r")
+    print(file.read())
+    file.close()
 
 # Just a random counter to display text logic
 counter = 0
@@ -25,8 +35,13 @@ label.pack(padx=5, pady=5)
 
 # Button Widget 
 b1 = tb.Button(root, text="Button 1", bootstyle="success, outline", 
-command=change_counter)
+    command=change_counter)
+
 b1.pack(side=LEFT, padx=5, pady=10, fill="x")
 
+button = tb.Button(root, text="Open File", 
+    bootstyle="primary, outline", command=openfile)
+
+button.pack()
 # Start the app
 root.mainloop()
