@@ -1,5 +1,1 @@
-# Things I need to learn 
-PyDub
-
-##### Audio concatenation 
-- Taking parts of files and adding them together seperately (without the middle or respective ends)
+![image](https://github.com/user-attachments/assets/0d7ff2e8-6459-41ad-afaf-446037807baa)
