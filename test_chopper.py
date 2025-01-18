@@ -7,19 +7,20 @@ import audio_manipulation as am
 # Import the filedialog to open files
 from tkinter import filedialog
 
+# Method to retrieve user file and send file to AM
 def openfile():
+    # Open the windows file dialog
     filepath = filedialog.askopenfile()
+    # Python opens the file
     file = open(filepath.name, "r")
-    print(file.read())
-    file.close()
+    # Audio manipulation methods
+    am.print_file_path(filepath.name)
+    am.amplitude_envelope(filepath.name)
 
-# Just a random counter to display text logic
-counter = 0
-def change_counter():
-    # counter needs to be global in order to be accessed in py
-    global counter
-    counter += 1
-    label.config(text=counter)
+    ## Python closes the File
+    file.close()
+    ## Update the view to show the uploaded file path
+    label.configure(text="file path: " + filepath.name)
 
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
@@ -30,18 +31,13 @@ root.geometry("720x720")
 # text is the text to be shown, bootstyle is the tb style
 # there is also an second option for an attribute
 # primary, inverse or primary, outline
-label = tb.Label(text="Hello, World!", bootstyle="primary")
+label = tb.Label(text="No Break Selected", bootstyle="primary")
 label.pack(padx=5, pady=5)
 
-# Button Widget 
-b1 = tb.Button(root, text="Button 1", bootstyle="success, outline", 
-    command=change_counter)
-
-b1.pack(side=LEFT, padx=5, pady=10, fill="x")
-
+# Upload button
 button = tb.Button(root, text="Open File", 
-    bootstyle="primary, outline", command=openfile)
+    bootstyle="primary", command=openfile)
 
-button.pack()
+button.pack(fill="x", padx=5, pady=5)
 # Start the app
 root.mainloop()
