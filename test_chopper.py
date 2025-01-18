@@ -11,7 +11,7 @@ def openfile():
         file = open(filepath.name, "r") # Python opens the file
 
         am.print_file_path(filepath.name) #print filepath
-        song, sr = am.amplitude_envelope(filepath.name) # Get amplitude envelope information
+        song, sr = am.find_sample_duration(filepath.name) # Get amplitude envelope information
 
         # Update the view to show the uploaded file path
         label.configure(text="file path: " + filepath.name)
@@ -22,7 +22,7 @@ def openfile():
         # Embed the plot in Tkinter
         canvas = FigureCanvasTkAgg(fig, master=frame)
         canvas.draw()
-        canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+        canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, padx=5, pady=5)
 
         # Python closes the File
         file.close()
@@ -30,7 +30,7 @@ def openfile():
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
-root.geometry("800x600")
+root.geometry("800x800")
 
 # Create a frame for the plot
 frame = Frame(root)

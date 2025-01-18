@@ -5,10 +5,13 @@ from itertools import cycle
 import matplotlib.pyplot as plt
 import numpy as np
 
+FRAME_SIZE = 1024
+HOP_LENGTH = 512
+
 def print_file_path(filepath):
     print(f"File path received: {filepath}")
 
-def amplitude_envelope(path):
+def find_sample_duration(path):
     y, sr = librosa.load(path)
     print(f"Sample rate: {sr}")
     sample_duration = 1 / sr
@@ -25,8 +28,18 @@ def plot_creation(song, sr):
     # Create a figure
     fig, ax = plt.subplots(figsize=(15, 17))
 
+    # Create a time array along with the amplitude in time
+    song_envelope = audio_envelope(song)
+    frames = range(0, song_envelope.size)
+    t = librosa.frames_to_time(frames, hop_length=HOP_LENGTH)
+
     librosa.display.waveshow(song, sr=sr, ax=ax, alpha=0.5)
+    ax.plot(t, song_envelope, color="r")
     ax.set_title("File Waveform")
     ax.set_ylim(-1, 1)
 
     return fig
+
+# calculate the audio envelope
+def audio_envelope(signal):
+    return np.array([max(signal[i:i+FRAME_SIZE]) for i in range(0, signal.size, HOP_LENGTH)])
