@@ -1,8 +1,7 @@
 import ttkbootstrap as tb
 import audio_manipulation as am
-from tkinter import filedialog, Tk, Frame, TOP, BOTH, Label
+from tkinter import filedialog, Tk, Frame, Label
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
 
 # Method to retrieve user file and send file to AM
 def openfile():
@@ -16,13 +15,17 @@ def openfile():
         # Update the view to show the uploaded file path
         label.configure(text="file path: " + filepath.name)
 
-        # Create the plot
-        fig = am.plot_creation(song, sr)
+        # Create the amplitude envelope plot
+        ae_fig = am.create_amplitude_envelope_plot(song, sr)
+        ae_canvas = FigureCanvasTkAgg(ae_fig, master=frame)
+        ae_canvas.draw()
+        ae_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5)
 
-        # Embed the plot in Tkinter
-        canvas = FigureCanvasTkAgg(fig, master=frame)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, padx=5, pady=5)
+        # Create the zero crossing rate plot
+        fft_fig = am.create_frequency_plot(song, sr)
+        fft_canvas = FigureCanvasTkAgg(fft_fig, master=frame)
+        fft_canvas.draw()
+        fft_canvas.get_tk_widget().grid(row=1, column=0, padx=5, pady=5)
 
         # Python closes the File
         file.close()
@@ -30,19 +33,28 @@ def openfile():
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
-root.geometry("800x800")
+root.geometry("800x600")
 
-# Create a frame for the plot
+# Configure grid layout
+root.grid_rowconfigure(1, weight=1)
+root.grid_columnconfigure(0, weight=1)
+
+# Create a frame for the plots
 frame = Frame(root)
-frame.pack(side=TOP, fill=BOTH, expand=1)
+frame.grid(row=1, column=0, sticky="nsew")
+
+# Configure grid layout for the frame
+frame.grid_rowconfigure(0, weight=1)
+frame.grid_rowconfigure(1, weight=1)
+frame.grid_columnconfigure(0, weight=1)
 
 # Label to show the file path
 label = Label(root, text="No file selected")
-label.pack(side=TOP, fill=BOTH, expand=1)
+label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
 # Upload button
 button = tb.Button(root, text="Open File", bootstyle="primary", command=openfile)
-button.pack(fill="x", padx=5, pady=5)
+button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
 # Start the app
 root.mainloop()
