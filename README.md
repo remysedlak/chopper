@@ -1,1 +1,4 @@
-![image](https://github.com/user-attachments/assets/0d7ff2e8-6459-41ad-afaf-446037807baa)
+# Audio Signal Processing through .wav files
+
+### Development of features
+![image](https://github.com/user-attachments/assets/11cdf97a-1dc1-4df4-a0f7-e774baf7fad8)
