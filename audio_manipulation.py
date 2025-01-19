@@ -69,6 +69,8 @@ class AudioProcessor:
         fig, ax = plt.subplots(figsize=(5, 1))
         ax.plot(t[10000:10400], self.song[10000:10400], color="r")
         ax.plot(t[10000:10400], sin[10000:10400], color="b")
+
+        ax.fill_between(t[10000:10400], sin[10000:10400] * self.song[10000:10400], color="g")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("Amplitude")
         ax.set_title("Sinusoidal Wave")
