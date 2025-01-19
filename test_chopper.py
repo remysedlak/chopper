@@ -14,28 +14,33 @@ def openfile():
         # Update the view to show the uploaded file path
         label.configure(text="file path: " + filepath.name)
 
-        # Create the amplitude envelope plot
-        ae_fig = processor.create_amplitude_envelope_plot()
-        ae_canvas = FigureCanvasTkAgg(ae_fig, master=frame)
-        ae_canvas.draw()
-        ae_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        # # Create the amplitude envelope plot
+        # ae_fig = processor.create_amplitude_envelope_plot()
+        # ae_canvas = FigureCanvasTkAgg(ae_fig, master=frame)
+        # ae_canvas.draw()
+        # ae_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 
-        # Create the RMSE plot
-        rmse_fig = processor.create_rmse_plot()
-        rmse_canvas = FigureCanvasTkAgg(rmse_fig, master=frame)
-        rmse_canvas.draw()
-        rmse_canvas.get_tk_widget().grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+        # # Create the RMSE plot
+        # rmse_fig = processor.create_rmse_plot()
+        # rmse_canvas = FigureCanvasTkAgg(rmse_fig, master=frame)
+        # rmse_canvas.draw()
+        # rmse_canvas.get_tk_widget().grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
 
-        # Create the ZCR plot
-        zcr_fig = processor.create_zcr_plot()
-        zcr_canvas = FigureCanvasTkAgg(zcr_fig, master=frame)
-        zcr_canvas.draw()
-        zcr_canvas.get_tk_widget().grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
+        # # Create the ZCR plot
+        # zcr_fig = processor.create_zcr_plot()
+        # zcr_canvas = FigureCanvasTkAgg(zcr_fig, master=frame)
+        # zcr_canvas.draw()
+        # zcr_canvas.get_tk_widget().grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
 
+        # Create the sinusoidal wave plot
+        sw_fig = processor.create_sinusoidal_wave_plot()
+        sw_canvas = FigureCanvasTkAgg(sw_fig, master=frame)
+        sw_canvas.draw()
+        sw_canvas.get_tk_widget().grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
-root.geometry("800x900")
+root.geometry("500x500")
 
 # Configure grid layout
 root.grid_rowconfigure(1, weight=1)

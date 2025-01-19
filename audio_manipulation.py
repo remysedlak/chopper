@@ -45,19 +45,30 @@ class AudioProcessor:
             rms.append(rms_current_frame)
         return np.array(rms)
 
-    def fourier_transform(self, signal, sr):
-        ft = sp.fft.fft(signal)
+    def fourier_transform(self, song, sr):
+        ft = sp.fft.fft(song)
         magnitude = np.absolute(ft)
-        frequency = np.linspace(0, sr, len(magnitude))
+        frequency = np.linspace(0, self.sr, len(magnitude))
         return frequency, magnitude
 
-    def create_sinusoidal_wave_plot(self, frequency, duration, sr):
-        f = 523
-        phase = 0
-        t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-        sin = 0.5 * np.sin(2 * np.pi * (f * t - phase))
+    # To truly move from time domain to frequency domain, compare signal and sinus
+    # High magnitude showes simularities between the sample and a certain frequency
+    def create_sinusoidal_wave_plot(self):
+        samples = range(len(self.song))
+        t = librosa.samples_to_time(samples, sr=self.sr)
+        
+        # Find the dominant frequency of the signal
+        ft = sp.fft.fft(self.song)
+        magnitude = np.absolute(ft)
+        frequency = np.linspace(0, self.sr, len(magnitude))
+        dominant_frequency = frequency[np.argmax(magnitude)]
+        
+        phase = 0.75
+        sin = 0.1 * np.sin(2 * np.pi * (dominant_frequency * t - phase))
+        
         fig, ax = plt.subplots(figsize=(5, 1))
-        ax.plot(t[10000:10400], sin[10000:10400], color="r")
+        ax.plot(t[10000:10400], self.song[10000:10400], color="r")
+        ax.plot(t[10000:10400], sin[10000:10400], color="b")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("Amplitude")
         ax.set_title("Sinusoidal Wave")
