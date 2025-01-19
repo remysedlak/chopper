@@ -1,39 +1,41 @@
 import ttkbootstrap as tb
-import audio_manipulation as am
 from tkinter import filedialog, Tk, Frame, Label
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from audio_manipulation import AudioProcessor
 
 # Method to retrieve user file and send file to AM
 def openfile():
     filepath = filedialog.askopenfile() # Open the windows file dialog
     if filepath:
-        file = open(filepath.name, "r") # Python opens the file
-
-        am.print_file_path(filepath.name) #print filepath
-        song, sr = am.find_sample_duration(filepath.name) # Get amplitude envelope information
+        processor = AudioProcessor(filepath.name)
+        processor.print_file_path()
+        song, sr = processor.find_sample_duration()
 
         # Update the view to show the uploaded file path
         label.configure(text="file path: " + filepath.name)
 
         # Create the amplitude envelope plot
-        ae_fig = am.create_amplitude_envelope_plot(song, sr)
+        ae_fig = processor.create_amplitude_envelope_plot()
         ae_canvas = FigureCanvasTkAgg(ae_fig, master=frame)
         ae_canvas.draw()
-        ae_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5)
+        ae_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 
-        # Create the zero crossing rate plot
-        fft_fig = am.create_frequency_plot(song, sr)
-        fft_canvas = FigureCanvasTkAgg(fft_fig, master=frame)
-        fft_canvas.draw()
-        fft_canvas.get_tk_widget().grid(row=1, column=0, padx=5, pady=5)
+        # Create the RMSE plot
+        rmse_fig = processor.create_rmse_plot()
+        rmse_canvas = FigureCanvasTkAgg(rmse_fig, master=frame)
+        rmse_canvas.draw()
+        rmse_canvas.get_tk_widget().grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
 
-        # Python closes the File
-        file.close()
+        # Create the ZCR plot
+        zcr_fig = processor.create_zcr_plot()
+        zcr_canvas = FigureCanvasTkAgg(zcr_fig, master=frame)
+        zcr_canvas.draw()
+        zcr_canvas.get_tk_widget().grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
 
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
-root.geometry("800x600")
+root.geometry("800x900")
 
 # Configure grid layout
 root.grid_rowconfigure(1, weight=1)
@@ -46,6 +48,7 @@ frame.grid(row=1, column=0, sticky="nsew")
 # Configure grid layout for the frame
 frame.grid_rowconfigure(0, weight=1)
 frame.grid_rowconfigure(1, weight=1)
+frame.grid_rowconfigure(2, weight=1)
 frame.grid_columnconfigure(0, weight=1)
 
 # Label to show the file path
