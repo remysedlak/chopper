@@ -60,6 +60,13 @@ def openfile():
         sp_canvas.get_tk_widget().pack()
         notebook.add(frame_sp, text="Spectrogram")
 
+        # Create the MFCC plot with scrollbar
+        mfcc_fig = processor.create_mfcc_plot()
+        mfcc_canvas = FigureCanvasTkAgg(mfcc_fig, master=frame_mfcc)
+        mfcc_canvas.draw()
+        mfcc_canvas.get_tk_widget().pack()
+        notebook.add(frame_mfcc, text="MFCC2")
+
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
@@ -79,10 +86,12 @@ frame_rmse = Frame(notebook, width=800, height=600)
 frame_zcr = Frame(notebook, width=800, height=600)
 frame_sw = Frame(notebook, width=800, height=600)
 frame_mag = Frame(notebook, width=800, height=600)
-
+frame_mfcc = Frame(notebook, width=800, height=600)
 # Create a frame and canvas for the spectrogram with scrollbar
 frame_sp = Frame(notebook, width=800, height=600)
 frame_sp.pack(fill="both", expand=True)
+
+
 # Label to show the file path
 label = Label(root, text="No file selected")
 label.grid(row=0, column=0, padx=5, pady=5, sticky="ew")

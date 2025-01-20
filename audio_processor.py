@@ -1,5 +1,6 @@
 import librosa
 import librosa.display
+import librosa.feature
 from itertools import cycle
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +22,10 @@ class AudioProcessor:
         self.y_song = self.short_time_fourier_transform() # Spectrogram
         self.mel_spectrogram = librosa.feature.melspectrogram(y=self.song, sr=self.sr, 
                                     n_fft=FRAME_SIZE, hop_length=HOP_LENGTH, n_mels=128)
-        
+        self.mfccs = librosa.feature.mfcc(y=self.song, n_mfcc=13, sr=self.sr) #MFCCs
+        self.mfccs_delta1, self.mfccs_delta2 = self.mfccs_delta() # 1st and 2nd Derivative of MFCCs
+        self.cc_mfccs = self.mfccs + self.mfccs_delta1+self.mfccs_delta2 #Concatenated MFCCs
+
 
     def print_file_info(self):
         print(f"File path received: {self.path}")
@@ -58,6 +62,11 @@ class AudioProcessor:
         s_song = librosa.stft(self.song, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)
         y_song = np.abs(s_song) ** 2 # Moving from complex numbers to magnitude
         return y_song
+
+    def mfccs_delta(self):
+        mfccs_delta1 = librosa.feature.delta(self.mfccs)
+        mfccs_delta2 = librosa.feature.delta(self.mfccs, order = 2)
+        return mfccs_delta1, mfccs_delta2
 
     # To truly move from time domain to frequency domain, compare signal and sinus
     # High magnitude showes simularities between the sample and a certain frequency
@@ -146,6 +155,16 @@ class AudioProcessor:
         fig, ax = plt.subplots(figsize=(8, 6))
         img = librosa.display.specshow(librosa.power_to_db(self.mel_spectrogram), x_axis="time", y_axis="mel", sr=self.sr)
         ax.set_title("Mel Spectrogram")
+        fig.colorbar(img, format="%+2.0f")
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("Mel")
+        return fig
+
+    def create_mfcc_plot(self):
+        fig, ax = plt.subplots(figsize=(8, 6))
+        img = librosa.display.specshow(self.mfccs_delta2, x_axis="time",
+                                       sr=self.sr)
+        ax.set_title("MFCC Delta 2")
         fig.colorbar(img, format="%+2.0f")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("Mel")
