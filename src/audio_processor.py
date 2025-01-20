@@ -25,7 +25,8 @@ class AudioProcessor:
         self.mfcc_delta1, self.mfcc_delta2 = self.mfcc_delta() # 1st and 2nd Derivative of MFCCs
         self.cc_mfcc = self.mfcc + self.mfcc_delta1+self.mfcc_delta2 #Concatenated MFCCs
         self.ber = self.band_energy_ratio(2000)
-
+        self.sc = librosa.feature.spectral_centroid(y=self.song, sr= self.sr, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)[0]
+        self.bandwidth = librosa.feature.spectral_bandwidth(y=self.song, sr= self.sr, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)[0]
 
     def print_file_info(self):
         print(f"File path received: {self.path}")
@@ -198,4 +199,18 @@ class AudioProcessor:
         t = librosa.time_to_frames(frames, hop_length=HOP_LENGTH)
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.plot(t, self.ber, color = 'r')
+        return fig
+
+    def create_spectral_centroid_plot(self):
+        frames = range(len(self.sc))
+        t = librosa.time_to_frames(frames, hop_length=HOP_LENGTH)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(t, self.sc, color='y')
+        return fig
+
+    def create_bandwidth_plot(self):
+        frames = range(len(self.bandwidth))
+        t = librosa.time_to_frames(frames, hop_length=HOP_LENGTH)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(t, self.bandwidth, color='g')
         return fig

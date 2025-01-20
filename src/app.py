@@ -74,6 +74,20 @@ def openfile():
         ber_canvas.get_tk_widget().pack()
         notebook.add(frame_ber, text="BER")
 
+        # Create Spectral Center plot
+        sc_fig = processor.create_spectral_centroid_plot()
+        sc_canvas = FigureCanvasTkAgg(sc_fig, master=frame_sc)
+        sc_canvas.draw()
+        sc_canvas.get_tk_widget().pack()
+        notebook.add(frame_sc, text="SC")
+
+        # Create BW plot
+        bw_fig = processor.create_bandwidth_plot()
+        bw_canvas = FigureCanvasTkAgg(bw_fig, master=frame_bw)
+        bw_canvas.draw()
+        bw_canvas.get_tk_widget().pack()
+        notebook.add(frame_bw, text="Bandwidth")
+
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
@@ -95,6 +109,8 @@ frame_sw = Frame(notebook, width=800, height=600)
 frame_mag = Frame(notebook, width=800, height=600)
 frame_mfcc = Frame(notebook, width=800, height=600)
 frame_ber = Frame(notebook, width=800, height=600)
+frame_sc = Frame(notebook, width=800, height=600)
+frame_bw = Frame(notebook, width=800, height=600)
 # Create a frame and canvas for the spectrogram with scrollbar
 frame_sp = Frame(notebook, width=800, height=600)
 frame_sp.pack(fill="both", expand=True)
