@@ -9,8 +9,7 @@ def openfile():
     filepath = filedialog.askopenfile()  # Open the windows file dialog
     if filepath:
         processor = AudioProcessor(filepath.name)
-        processor.print_file_path()
-        song, sr = processor.find_sample_duration()
+        processor.print_file_info()
 
         # Update the view to show the uploaded file path
         label.configure(text="file path: " + filepath.name)
