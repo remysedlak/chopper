@@ -69,7 +69,7 @@ class AudioProcessor:
         frequency, magnitude = self.fast_fourier_transform(self.song, self.sr)
         dominant_frequency = frequency[np.argmax(magnitude)]
         
-        phase = 0.55 # We want the phase that will maximize the area of the fill_between
+        phase = 0.75 # We want the phase that will maximize the area of the fill_between
         sin = 0.1 * np.sin(2 * np.pi * (dominant_frequency * t - phase))
         
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -94,6 +94,7 @@ class AudioProcessor:
         fig, ax = plt.subplots(figsize=(8, 6))
         frames = range(0, self.song_envelope.size)
         t = librosa.frames_to_time(frames, hop_length=HOP_LENGTH)
+        # Display the waveform
         librosa.display.waveshow(self.song, sr=self.sr, ax=ax, alpha=0.5)
         ax.plot(t, self.song_envelope, color="r")
         ax.set_title("Amplitude Envelope")
@@ -105,6 +106,7 @@ class AudioProcessor:
         fig, ax = plt.subplots(figsize=(8, 6))
         frames = range(0, self.song_rmse.size)
         t = librosa.frames_to_time(frames, hop_length=HOP_LENGTH)
+        # Display the waveform
         librosa.display.waveshow(self.song, sr=self.sr, ax=ax, alpha=0.5)
         ax.plot(t, self.song_rmse, color="b")
         ax.set_title("Root Mean Square Energy")
