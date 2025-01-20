@@ -23,14 +23,11 @@ class AudioProcessor:
                                     n_fft=FRAME_SIZE, hop_length=HOP_LENGTH, n_mels=128)
         
 
-    def print_file_path(self):
+    def print_file_info(self):
         print(f"File path received: {self.path}")
-
-    def find_sample_duration(self):
         print(f"Duration of one sample: {self.sample_duration:.6f} seconds")
         print(f"Sample rate: {self.sr}")
         print(f"Duration of the signal: {self.song_duration:.6f} seconds")
-        return self.song, self.sr
 
     def audio_envelope(self, signal):
         return np.array([max(signal[i:i+FRAME_SIZE]) for i in range(0, signal.size, HOP_LENGTH)])
@@ -48,12 +45,14 @@ class AudioProcessor:
             rms.append(rms_current_frame)
         return np.array(rms)
 
+    # FFT returns the magnitude and frequency for an entire signal
     def fast_fourier_transform(self, song, sr):
         ft = sp.fft.fft(self.song)
         magnitude = np.absolute(ft)
         frequency = np.linspace(0, self.sr, len(magnitude))
         return frequency, magnitude
 
+    # STFT returns the magnitude and frequency for a signal, chunked in frames
     def short_time_fourier_transform(self):
         # Returns a duple. (half of frame_size/2 + 1, number of frames)
         s_song = librosa.stft(self.song, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)
