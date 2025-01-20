@@ -1,6 +1,5 @@
 ## Audio Signal Processing through .wav files
 
-#### Development of features
-![image](https://github.com/user-attachments/assets/11cdf97a-1dc1-4df4-a0f7-e774baf7fad8)
+### Snapshot 1/19/2025
+![image](https://github.com/user-attachments/assets/7a6935a8-50ea-4aec-b118-65404aad8a2d)
 
-![image](https://github.com/user-attachments/assets/8874ab41-8a3b-4a0b-a628-006f3636c18e)
