@@ -19,6 +19,7 @@ class AudioProcessor:
         self.song_envelope = self.audio_envelope(self.song)
         self.song_rmse = self.root_mean_square_energy(self.song)
         self.song_zcr = self.zero_crossing_rate(self.song)
+        
 
     def print_file_path(self):
         print(f"File path received: {self.path}")
@@ -115,4 +116,13 @@ class AudioProcessor:
         ax.set_title("Zero Crossing Rate")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("ZCR")
+        return fig
+
+    def create_magnitude_spectrum_plot(self, f_ratio=0.1):
+        num_f_bins = int(len(self.frequency) * f_ratio)
+        fig, ax = plt.subplots(figsize=(5, 1))
+        ax.plot(self.frequency[:num_f_bins], self.magnitude[:num_f_bins])
+        ax.set_xlabel("Frequency (Hz)")
+        ax.set_ylabel("Magnitude")
+        ax.set_title("Magnitude Spectrum")
         return fig

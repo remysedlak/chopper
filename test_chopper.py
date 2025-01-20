@@ -37,6 +37,13 @@ def openfile():
         sw_canvas = FigureCanvasTkAgg(sw_fig, master=frame)
         sw_canvas.draw()
         sw_canvas.get_tk_widget().grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
+
+        # Create the magnitude plot
+        mag_fig = processor.create_magnitude_spectrum_plot()
+        mag_canvas = FigureCanvasTkAgg(mag_fig, master=frame)
+        mag_canvas.draw()
+        mag_canvas.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
