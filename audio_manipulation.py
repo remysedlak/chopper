@@ -63,7 +63,7 @@ class AudioProcessor:
         frequency = np.linspace(0, self.sr, len(magnitude))
         dominant_frequency = frequency[np.argmax(magnitude)]
         
-        phase = 0.75
+        phase = 0.75 # We want the phase that will maximize the area of the fill_between
         sin = 0.1 * np.sin(2 * np.pi * (dominant_frequency * t - phase))
         
         fig, ax = plt.subplots(figsize=(5, 1))
