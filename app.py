@@ -2,7 +2,7 @@ import ttkbootstrap as tb
 from tkinter import filedialog, Tk, Frame, Label, Scrollbar, Canvas
 from ttkbootstrap import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from audio_manipulation import AudioProcessor
+from audio_processor import AudioProcessor
 
 # Method to retrieve user file and send file to AM
 def openfile():
