@@ -88,6 +88,13 @@ def openfile():
         bw_canvas.get_tk_widget().pack()
         notebook.add(frame_bw, text="Bandwidth")
 
+        # Create CQ plot
+        cq_fig = processor.create_cq_plot()
+        cq_canvas = FigureCanvasTkAgg(cq_fig, master=frame_cq)
+        cq_canvas.draw()
+        cq_canvas.get_tk_widget().pack()
+        notebook.add(frame_cq, text="Q-Spec")
+
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
@@ -111,6 +118,7 @@ frame_mfcc = Frame(notebook, width=800, height=600)
 frame_ber = Frame(notebook, width=800, height=600)
 frame_sc = Frame(notebook, width=800, height=600)
 frame_bw = Frame(notebook, width=800, height=600)
+frame_cq = Frame(notebook, width=800, height=600)
 # Create a frame and canvas for the spectrogram with scrollbar
 frame_sp = Frame(notebook, width=800, height=600)
 frame_sp.pack(fill="both", expand=True)

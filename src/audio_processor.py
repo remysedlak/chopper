@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sp
 
-FRAME_SIZE = 2048
-HOP_LENGTH = 512
+FRAME_SIZE = 1028
+HOP_LENGTH = 256
 
 class AudioProcessor:
     def __init__(self, path):
@@ -27,6 +27,7 @@ class AudioProcessor:
         self.ber = self.band_energy_ratio(2000)
         self.sc = librosa.feature.spectral_centroid(y=self.song, sr= self.sr, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)[0]
         self.bandwidth = librosa.feature.spectral_bandwidth(y=self.song, sr= self.sr, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)[0]
+        self.constant_q = librosa.cqt(self.song, sr=self.sr, hop_length=HOP_LENGTH)
 
     def print_file_info(self):
         print(f"File path received: {self.path}")
@@ -213,4 +214,10 @@ class AudioProcessor:
         t = librosa.time_to_frames(frames, hop_length=HOP_LENGTH)
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.plot(t, self.bandwidth, color='g')
+        return fig
+
+    def create_cq_plot(self):
+        chromagram = librosa.feature.chroma_cqt(y=self.song, sr=self.sr, hop_length=HOP_LENGTH)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        librosa.display.specshow(chromagram, x_axis='time', y_axis='chroma', hop_length=HOP_LENGTH, cmap='coolwarm')
         return fig
