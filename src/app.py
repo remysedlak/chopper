@@ -23,7 +23,7 @@ def openfile():
         ae_canvas = FigureCanvasTkAgg(ae_fig, master=frame_ae)
         ae_canvas.draw()
         ae_canvas.get_tk_widget().pack()
-        notebook.add(frame_ae, text="Amplitude Envelope")
+        notebook.add(frame_ae, text="AE")
 
         # Create the RMSE plot
         rmse_fig = processor.create_rmse_plot()
@@ -39,12 +39,12 @@ def openfile():
         zcr_canvas.get_tk_widget().pack()
         notebook.add(frame_zcr, text="ZCR")
 
-        # Create the sinusoidal wave plot
-        sw_fig = processor.create_sinusoidal_wave_plot()
-        sw_canvas = FigureCanvasTkAgg(sw_fig, master=frame_sw)
-        sw_canvas.draw()
-        sw_canvas.get_tk_widget().pack()
-        notebook.add(frame_sw, text="Sinusoidal Wave")
+        # # Create the sinusoidal wave plot
+        # sw_fig = processor.create_sinusoidal_wave_plot()
+        # sw_canvas = FigureCanvasTkAgg(sw_fig, master=frame_sw)
+        # sw_canvas.draw()
+        # sw_canvas.get_tk_widget().pack()
+        # notebook.add(frame_sw, text="Sinusoidal Wave")
 
         # Create the magnitude plot
         mag_fig = processor.create_magnitude_spectrum_plot()
@@ -67,6 +67,13 @@ def openfile():
         mfcc_canvas.get_tk_widget().pack()
         notebook.add(frame_mfcc, text="MFCC2")
 
+        # Create the BER plot with scrollbar
+        ber_fig = processor.create_ber_plot()
+        ber_canvas = FigureCanvasTkAgg(ber_fig, master=frame_ber)
+        ber_canvas.draw()
+        ber_canvas.get_tk_widget().pack()
+        notebook.add(frame_ber, text="BER")
+
 # Setting the theme of the window and size
 root = tb.Window(themename="solar")
 root.title("Audio Manipulation")
@@ -87,6 +94,7 @@ frame_zcr = Frame(notebook, width=800, height=600)
 frame_sw = Frame(notebook, width=800, height=600)
 frame_mag = Frame(notebook, width=800, height=600)
 frame_mfcc = Frame(notebook, width=800, height=600)
+frame_ber = Frame(notebook, width=800, height=600)
 # Create a frame and canvas for the spectrogram with scrollbar
 frame_sp = Frame(notebook, width=800, height=600)
 frame_sp.pack(fill="both", expand=True)

@@ -18,12 +18,13 @@ class AudioProcessor:
         self.song_envelope = self.audio_envelope(self.song)
         self.song_rmse = self.root_mean_square_energy(self.song)
         self.song_zcr = self.zero_crossing_rate(self.song)
-        self.y_song = self.short_time_fourier_transform() # Spectrogram
+        self.s_song, self.y_song = self.short_time_fourier_transform() # Spectrogram
         self.mel_spectrogram = librosa.feature.melspectrogram(y=self.song, sr=self.sr, 
                                     n_fft=FRAME_SIZE, hop_length=HOP_LENGTH, n_mels=128)
-        self.mfccs = librosa.feature.mfcc(y=self.song, n_mfcc=13, sr=self.sr) #MFCCs
-        self.mfccs_delta1, self.mfccs_delta2 = self.mfccs_delta() # 1st and 2nd Derivative of MFCCs
-        self.cc_mfccs = self.mfccs + self.mfccs_delta1+self.mfccs_delta2 #Concatenated MFCCs
+        self.mfcc = librosa.feature.mfcc(y=self.song, n_mfcc=13, sr=self.sr) #MFCCs
+        self.mfcc_delta1, self.mfcc_delta2 = self.mfcc_delta() # 1st and 2nd Derivative of MFCCs
+        self.cc_mfcc = self.mfcc + self.mfcc_delta1+self.mfcc_delta2 #Concatenated MFCCs
+        self.ber = self.band_energy_ratio(2000)
 
 
     def print_file_info(self):
@@ -60,12 +61,35 @@ class AudioProcessor:
         # Returns a duple. (half of frame_size/2 + 1, number of frames)
         s_song = librosa.stft(self.song, n_fft=FRAME_SIZE, hop_length=HOP_LENGTH)
         y_song = np.abs(s_song) ** 2 # Moving from complex numbers to magnitude
-        return y_song
+        return s_song, y_song
 
-    def mfccs_delta(self):
-        mfccs_delta1 = librosa.feature.delta(self.mfccs)
-        mfccs_delta2 = librosa.feature.delta(self.mfccs, order = 2)
-        return mfccs_delta1, mfccs_delta2
+    def mfcc_delta(self):
+        mfcc_delta1 = librosa.feature.delta(self.mfcc)
+        mfcc_delta2 = librosa.feature.delta(self.mfcc, order = 2)
+        return mfcc_delta1, mfcc_delta2
+
+    def split_frequency_bin(self, split_frequency=2000):
+        f_range = self.sr / 2 # Nyquist theorem
+        f_delta_per_bin = f_range / self.s_song.shape[0]
+        split_f_bin = np.floor(split_frequency / f_delta_per_bin) #10.1 --> 10, 10.9 --> 10
+        return int(split_f_bin)
+
+    def band_energy_ratio(self, split_frequency=2000):
+        split_frequency_bin = self.split_frequency_bin(split_frequency)
+        # Move to Color Spectrum
+        power_spec = np.abs(self.s_song) **2
+        power_spec = power_spec.T
+
+        band_energy_ratio = []
+        # Calculate the band energy ratio for each frame
+        for f_in_frame in power_spec:
+            sum_power_low_f = np.sum(f_in_frame[:split_frequency_bin])
+            sum_power_high_f = np.sum(f_in_frame[split_frequency_bin:])
+            ber_current_frame = sum_power_low_f / sum_power_high_f
+            band_energy_ratio.append(ber_current_frame)
+        return np.array(band_energy_ratio)
+
+
 
     # To truly move from time domain to frequency domain, compare signal and sinus
     # High magnitude showes simularities between the sample and a certain frequency
@@ -161,10 +185,17 @@ class AudioProcessor:
 
     def create_mfcc_plot(self):
         fig, ax = plt.subplots(figsize=(8, 6))
-        img = librosa.display.specshow(self.mfccs_delta2, x_axis="time",
+        img = librosa.display.specshow(self.mfcc_delta2, x_axis="time",
                                        sr=self.sr)
         ax.set_title("MFCC Delta 2")
         fig.colorbar(img, format="%+2.0f")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("Mel")
+        return fig
+
+    def create_ber_plot(self):
+        frames = range(len(self.ber))
+        t = librosa.time_to_frames(frames, hop_length=HOP_LENGTH)
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(t, self.ber, color = 'r')
         return fig
